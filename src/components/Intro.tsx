@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
@@ -120,7 +120,7 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
                   width: '80px', height: '80px', borderRadius: '50%',
                   backgroundColor: 'transparent', border: '1px solid var(--accent-gold)',
                   display: 'flex', justifyContent: 'center', alignItems: 'center',
-                  cursor: 'none', position: 'relative', overflow: 'hidden'
+                  cursor: 'pointer', position: 'relative', overflow: 'hidden'
                 }}
               >
                 <motion.div
@@ -159,7 +159,7 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 style={{ position: 'absolute', inset: 0, backgroundColor: '#fff', zIndex: 200 }}
-                transition={{ duration: 0.1, repeat: 1, yoyo: true }}
+                transition={{ duration: 0.1, repeat: 1, repeatType: 'reverse' }}
               />
             </motion.div>
           )}
