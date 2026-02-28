@@ -1,14 +1,33 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import momentsData from '../data/moments.json';
+
+interface Moment {
+  id: number;
+  filename: string;
+  caption: string;
+  filter: string;
+  aspectRatio: string;
+  type: string;
+}
 
 const Gallery: React.FC = () => {
-  // 之後你可以將這些 URL 替換成你們的真實照片
-  const photos = [
-    { url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600', caption: 'Laughter' },
-    { url: 'https://images.unsplash.com/photo-1516589174184-c685266d4af4?q=80&w=600', caption: 'Moments' },
-    { url: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=600', caption: 'Travels' },
-    { url: 'https://images.unsplash.com/photo-1522673607200-1648482ce486?q=80&w=600', caption: 'Anniversary' },
-  ];
+  const [moments, setMoments] = useState<Moment[]>([]);
+
+  useEffect(() => {
+    // 這裡我們載入剛才建立的 moments.json 資料
+    setMoments(momentsData);
+  }, []);
+
+  // 浪漫濾鏡定義
+  const getFilterStyle = (filterType: string) => {
+    switch (filterType) {
+      case 'romantic': return 'sepia(0.2) saturate(1.2) brightness(1.05)';
+      case 'warm': return 'sepia(0.3) saturate(1.1) contrast(1.1)';
+      case 'vintage': return 'grayscale(0.1) contrast(1.2) sepia(0.2)';
+      default: return 'none';
+    }
+  };
 
   return (
     <section id="gallery" className="container" style={{ textAlign: 'center' }}>
@@ -18,54 +37,80 @@ const Gallery: React.FC = () => {
         transition={{ duration: 1 }}
         style={{ fontSize: '2.5rem', marginBottom: '40px', color: '#4a4a4a' }}
       >
-        Our Moments
+        Captured Memories
       </motion.h2>
 
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-        gap: '20px',
-        maxWidth: '1000px',
-        margin: '0 auto'
+        gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+        gap: '40px',
+        maxWidth: '1200px',
+        margin: '0 auto',
+        padding: '20px'
       }}>
-        {photos.map((photo, index) => (
+        {moments.map((moment, index) => (
           <motion.div
-            key={index}
-            whileHover={{ scale: 1.05 }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
+            key={moment.id}
+            initial={{ opacity: 0, rotate: index % 2 === 0 ? -2 : 2, y: 20 }}
+            whileInView={{ opacity: 1, rotate: index % 2 === 0 ? -1 : 1, y: 0 }}
+            whileHover={{ 
+              scale: 1.05, 
+              rotate: 0, 
+              zIndex: 10,
+              boxShadow: '0 20px 40px rgba(0,0,0,0.15)' 
+            }}
+            transition={{ type: "spring", stiffness: 100 }}
             style={{
-              position: 'relative',
-              borderRadius: '15px',
-              overflow: 'hidden',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+              padding: '15px 15px 50px 15px',
+              backgroundColor: '#fff',
+              boxShadow: '0 10px 25px rgba(0,0,0,0.08)',
+              border: '1px solid #f0f0f0',
+              borderRadius: '2px', // 拍立得通常是直角或微圓角
               cursor: 'pointer'
             }}
           >
-            <img 
-              src={photo.url} 
-              alt={photo.caption} 
-              style={{ width: '100%', height: '300px', objectFit: 'cover' }}
-            />
             <div style={{
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-              padding: '20px',
-              background: 'linear-gradient(transparent, rgba(0,0,0,0.6))',
-              color: 'white',
-              textAlign: 'left'
+              width: '100%',
+              aspectRatio: moment.aspectRatio,
+              overflow: 'hidden',
+              backgroundColor: '#eee',
+              marginBottom: '15px',
+              position: 'relative'
             }}>
-              <p className="romantic-text" style={{ fontSize: '1.2rem' }}>{photo.caption}</p>
+              {/* 自動美化照片：object-fit: cover 會自動填充並裁切多餘部分 */}
+              <img 
+                src={`/src/assets/uploads/${moment.filename}`} 
+                alt={moment.caption}
+                onError={(e) => {
+                  // 如果還沒上傳真實照片，顯示一個精美的佔位符
+                  (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=600&auto=format&fit=crop`;
+                }}
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover',
+                  filter: getFilterStyle(moment.filter),
+                  transition: 'filter 0.3s ease'
+                }}
+              />
             </div>
+            
+            {/* 手寫字體風格說明文字 */}
+            <p className="romantic-text" style={{ 
+              fontSize: '1.4rem', 
+              color: '#555',
+              marginTop: '10px',
+              letterSpacing: '1px'
+            }}>
+              {moment.caption}
+            </p>
           </motion.div>
         ))}
       </div>
-      <p style={{ marginTop: '20px', color: '#888', fontSize: '0.9rem' }}>
-        Click to see more memories soon...
-      </p>
+      
+      <div style={{ marginTop: '50px', fontStyle: 'italic', color: '#999' }}>
+        <p>Adding more stories to our library...</p>
+      </div>
     </section>
   );
 };

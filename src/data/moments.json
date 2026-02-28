@@ -1,0 +1,18 @@
+[
+  {
+    "id": 1,
+    "filename": "placeholder1.jpg",
+    "caption": "Our Sweet Beginning",
+    "filter": "romantic",
+    "aspectRatio": "3/4",
+    "type": "image"
+  },
+  {
+    "id": 2,
+    "filename": "placeholder2.jpg",
+    "caption": "Laughing Together",
+    "filter": "warm",
+    "aspectRatio": "1/1",
+    "type": "image"
+  }
+]
