@@ -2,19 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
     const checkMobile = () => setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
     checkMobile();
-    
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!isMobile) setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isMobile]);
+  }, []);
 
   return (
     <div style={{
@@ -29,19 +22,6 @@ const Hero: React.FC = () => {
       backgroundColor: 'var(--bg-dark)',
       padding: '0 20px'
     }}>
-      {!isMobile && (
-        <motion.div
-          animate={{ x: mousePosition.x - 400, y: mousePosition.y - 400 }}
-          transition={{ type: 'tween', ease: 'backOut', duration: 1.5 }}
-          style={{
-            position: 'absolute', top: 0, left: 0,
-            width: '800px', height: '800px',
-            background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%)',
-            borderRadius: '50%', pointerEvents: 'none', zIndex: 0
-          }}
-        />
-      )}
-
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -54,21 +34,15 @@ const Hero: React.FC = () => {
           transition={{ delay: 0.5, duration: 1.5 }}
           style={{ fontSize: isMobile ? '0.8rem' : '1rem', color: 'var(--accent-gold)', marginBottom: '20px', textTransform: 'uppercase' }}
         >
-          A Celebration of Love
+          A Celebration of One Year
         </motion.p>
         
         <h1 style={{ 
           fontSize: isMobile ? '12vw' : '5rem', 
           letterSpacing: '2px', 
-          lineHeight: '1.2',
-          display: 'flex',
-          flexDirection: isMobile ? 'column' : 'row',
-          alignItems: 'center',
-          gap: isMobile ? '10px' : '0'
+          lineHeight: '1.2'
         }}>
-          <span className="gold-gradient-text">Howard</span> 
-          <span style={{ fontSize: isMobile ? '1.5rem' : '3rem', margin: isMobile ? '0' : '0 20px', color: 'var(--text-muted)' }}>&</span> 
-          <span className="gold-gradient-text">Victoria</span>
+          <span className="gold-gradient-text">Howard & Victoria</span>
         </h1>
         
         <motion.div
@@ -77,8 +51,8 @@ const Hero: React.FC = () => {
           transition={{ delay: 1, duration: 1.5 }}
           style={{ marginTop: '30px' }}
         >
-          <p className="romantic-text" style={{ fontSize: isMobile ? '1.5rem' : '2rem', color: 'var(--text-muted)' }}>
-            Est. March 2nd
+          <p className="romantic-text" style={{ fontSize: isMobile ? '1.5rem' : '2.2rem', color: 'var(--text-muted)' }}>
+            三月二日 ‧ 我們的紀念日
           </p>
         </motion.div>
       </motion.div>

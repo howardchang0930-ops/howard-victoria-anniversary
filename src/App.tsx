@@ -15,7 +15,6 @@ const App: React.FC = () => {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // 偵測是否為手機
     const checkMobile = () => {
       setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
     };
@@ -23,9 +22,7 @@ const App: React.FC = () => {
     window.addEventListener('resize', checkMobile);
 
     const updateCursor = (e: MouseEvent) => setCursorPos({ x: e.clientX, y: e.clientY });
-    if (!isMobile) {
-      window.addEventListener('mousemove', updateCursor);
-    }
+    window.addEventListener('mousemove', updateCursor);
     
     if (loading) {
       document.body.style.overflow = 'hidden';
@@ -38,7 +35,7 @@ const App: React.FC = () => {
       window.removeEventListener('resize', checkMobile);
       document.body.style.overflow = 'auto';
     };
-  }, [loading, isMobile]);
+  }, [loading]);
 
   const triggerSurprise = () => {
     setShowHearts(true);
@@ -47,51 +44,32 @@ const App: React.FC = () => {
 
   return (
     <div className="App" style={{ backgroundColor: 'var(--bg-dark)' }}>
+      {/* 全域自定義游標 - 確保在所有層級之上 */}
+      {!isMobile && (
+        <motion.div
+          animate={{ x: cursorPos.x - 10, y: cursorPos.y - 10 }}
+          transition={{ type: 'spring', stiffness: 1000, damping: 30, mass: 0.1 }}
+          style={{
+            position: 'fixed',
+            top: 0, left: 0,
+            width: '24px', height: '24px',
+            border: '1px solid var(--accent-gold)',
+            borderRadius: '50%',
+            pointerEvents: 'none',
+            zIndex: 30000, // 高於 Intro
+            mixBlendMode: 'difference'
+          }}
+        >
+          <div style={{ position: 'absolute', top: '10px', left: '10px', width: '4px', height: '4px', backgroundColor: 'var(--accent-gold-light)', borderRadius: '50%' }} />
+        </motion.div>
+      )}
+
       <AnimatePresence>
         {loading && <Intro onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
       {!loading && (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
-          {/* 只有在非手機裝置才顯示自定義游標 */}
-          {!isMobile && (
-            <motion.div
-              animate={{ x: cursorPos.x - 10, y: cursorPos.y - 10 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}
-              style={{
-                position: 'fixed',
-                top: 0, left: 0,
-                width: '20px', height: '20px',
-                border: '1px solid var(--accent-gold)',
-                borderRadius: '50%',
-                pointerEvents: 'none',
-                zIndex: 10000,
-                mixBlendMode: 'difference'
-              }}
-            >
-              <div style={{ position: 'absolute', top: '8px', left: '8px', width: '4px', height: '4px', backgroundColor: 'var(--accent-gold-light)', borderRadius: '50%' }} />
-            </motion.div>
-          )}
-
-          <AnimatePresence>
-            {showHearts && (
-              <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
-                {[...Array(isMobile ? 20 : 40)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ y: -50, x: Math.random() * window.innerWidth, opacity: 0, scale: 0 }}
-                    animate={{ y: window.innerHeight + 50, opacity: [0, 1, 1, 0], scale: Math.random() * 0.5 + 0.5 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 4 + Math.random() * 4, ease: "linear", delay: Math.random() * 2 }}
-                    style={{ position: 'absolute', color: 'var(--accent-gold)' }}
-                  >
-                    <Sparkles size={24} />
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </AnimatePresence>
-
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.5 }}>
           <Hero />
           <Timeline />
           <Gallery />
@@ -118,7 +96,7 @@ const App: React.FC = () => {
               }}
             >
               <Sparkles size={18} />
-              Reveal Magic
+              查看驚喜
             </motion.button>
           </div>
 
