@@ -3,14 +3,18 @@ import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isMobile, setIsMobile] = useState(false);
   
   useEffect(() => {
+    const checkMobile = () => setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    checkMobile();
+    
     const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+      if (!isMobile) setMousePosition({ x: e.clientX, y: e.clientY });
     };
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isMobile]);
 
   return (
     <div style={{
@@ -22,25 +26,21 @@ const Hero: React.FC = () => {
       textAlign: 'center',
       position: 'relative',
       overflow: 'hidden',
-      backgroundColor: 'var(--bg-dark)'
+      backgroundColor: 'var(--bg-dark)',
+      padding: '0 20px'
     }}>
-      {/* Dynamic Cursor Light Effect */}
-      <motion.div
-        animate={{
-          x: mousePosition.x - 400,
-          y: mousePosition.y - 400,
-        }}
-        transition={{ type: 'tween', ease: 'backOut', duration: 1.5 }}
-        style={{
-          position: 'absolute',
-          top: 0, left: 0,
-          width: '800px', height: '800px',
-          background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          zIndex: 0
-        }}
-      />
+      {!isMobile && (
+        <motion.div
+          animate={{ x: mousePosition.x - 400, y: mousePosition.y - 400 }}
+          transition={{ type: 'tween', ease: 'backOut', duration: 1.5 }}
+          style={{
+            position: 'absolute', top: 0, left: 0,
+            width: '800px', height: '800px',
+            background: 'radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%)',
+            borderRadius: '50%', pointerEvents: 'none', zIndex: 0
+          }}
+        />
+      )}
 
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -50,16 +50,24 @@ const Hero: React.FC = () => {
       >
         <motion.p 
           initial={{ opacity: 0, letterSpacing: '0px' }}
-          animate={{ opacity: 1, letterSpacing: '4px' }}
+          animate={{ opacity: 1, letterSpacing: isMobile ? '2px' : '4px' }}
           transition={{ delay: 0.5, duration: 1.5 }}
-          style={{ fontSize: '1rem', color: 'var(--accent-gold)', marginBottom: '20px', textTransform: 'uppercase' }}
+          style={{ fontSize: isMobile ? '0.8rem' : '1rem', color: 'var(--accent-gold)', marginBottom: '20px', textTransform: 'uppercase' }}
         >
           A Celebration of Love
         </motion.p>
         
-        <h1 style={{ fontSize: '5rem', letterSpacing: '2px', lineHeight: '1.2' }}>
+        <h1 style={{ 
+          fontSize: isMobile ? '12vw' : '5rem', 
+          letterSpacing: '2px', 
+          lineHeight: '1.2',
+          display: 'flex',
+          flexDirection: isMobile ? 'column' : 'row',
+          alignItems: 'center',
+          gap: isMobile ? '10px' : '0'
+        }}>
           <span className="gold-gradient-text">Howard</span> 
-          <span style={{ fontSize: '3rem', margin: '0 20px', color: 'var(--text-muted)' }}>&</span> 
+          <span style={{ fontSize: isMobile ? '1.5rem' : '3rem', margin: isMobile ? '0' : '0 20px', color: 'var(--text-muted)' }}>&</span> 
           <span className="gold-gradient-text">Victoria</span>
         </h1>
         
@@ -69,28 +77,24 @@ const Hero: React.FC = () => {
           transition={{ delay: 1, duration: 1.5 }}
           style={{ marginTop: '30px' }}
         >
-          <p className="romantic-text" style={{ fontSize: '2rem', color: 'var(--text-muted)' }}>
+          <p className="romantic-text" style={{ fontSize: isMobile ? '1.5rem' : '2rem', color: 'var(--text-muted)' }}>
             Est. March 2nd
           </p>
         </motion.div>
       </motion.div>
 
-      {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2, duration: 1 }}
         style={{ position: 'absolute', bottom: '40px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '10px' }}>
-          Discover
-        </span>
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           style={{
             width: '1px',
-            height: '40px',
+            height: isMobile ? '30px' : '40px',
             background: 'linear-gradient(to bottom, var(--accent-gold), transparent)'
           }}
         />

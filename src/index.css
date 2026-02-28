@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Montserrat:wght@100..900&family=Noto+Serif+TC:wght@200..900&display=swap');
 
 :root {
-  /* Premium Palette */
   --bg-dark: #0a0a0a;
   --bg-light: #141414;
   --text-main: #f5f5f5;
@@ -18,7 +17,13 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  cursor: none; /* Hide default cursor for custom one */
+}
+
+/* 僅在支援指標(滑鼠)的裝置上隱藏原生游標 */
+@media (pointer: fine) {
+  * {
+    cursor: none;
+  }
 }
 
 body {
@@ -27,7 +32,6 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -41,38 +45,18 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 section {
-  padding: 120px 5%;
+  padding: 80px 5%;
   max-width: 1400px;
   margin: 0 auto;
-  position: relative;
 }
 
-.container {
-  width: 100%;
+/* 針對電腦版加強縮進 */
+@media (min-width: 1024px) {
+  section {
+    padding: 120px 5%;
+  }
 }
 
-/* Custom Selection */
-::selection {
-  background: var(--accent-gold);
-  color: var(--bg-dark);
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-dark);
-}
-::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-gold);
-}
-
-/* Glassmorphism utility */
 .glass {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
@@ -90,7 +74,5 @@ section {
 }
 
 @keyframes shine {
-  to {
-    background-position: 200% center;
-  }
+  to { background-position: 200% center; }
 }

@@ -12,12 +12,21 @@ const App: React.FC = () => {
   const [showHearts, setShowHearts] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // 偵測是否為手機
+    const checkMobile = () => {
+      setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
     const updateCursor = (e: MouseEvent) => setCursorPos({ x: e.clientX, y: e.clientY });
-    window.addEventListener('mousemove', updateCursor);
+    if (!isMobile) {
+      window.addEventListener('mousemove', updateCursor);
+    }
     
-    // 當正在加載時，禁止滾動
     if (loading) {
       document.body.style.overflow = 'hidden';
     } else {
@@ -26,9 +35,10 @@ const App: React.FC = () => {
 
     return () => {
       window.removeEventListener('mousemove', updateCursor);
+      window.removeEventListener('resize', checkMobile);
       document.body.style.overflow = 'auto';
     };
-  }, [loading]);
+  }, [loading, isMobile]);
 
   const triggerSurprise = () => {
     setShowHearts(true);
@@ -37,53 +47,45 @@ const App: React.FC = () => {
 
   return (
     <div className="App" style={{ backgroundColor: 'var(--bg-dark)' }}>
-      {/* 初始時光機動畫 */}
       <AnimatePresence>
         {loading && <Intro onComplete={() => setLoading(false)} />}
       </AnimatePresence>
 
-      {/* 只有在加載完成後才顯示的主站內容 */}
       {!loading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          {/* Global Custom Cursor */}
-          <motion.div
-            animate={{ x: cursorPos.x - 10, y: cursorPos.y - 10 }}
-            transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}
-            style={{
-              position: 'fixed',
-              top: 0, left: 0,
-              width: '20px', height: '20px',
-              border: '1px solid var(--accent-gold)',
-              borderRadius: '50%',
-              pointerEvents: 'none',
-              zIndex: 10000,
-              mixBlendMode: 'difference'
-            }}
-          >
-            <motion.div 
-              animate={{ x: 8, y: 8 }}
-              style={{ width: '4px', height: '4px', backgroundColor: 'var(--accent-gold-light)', borderRadius: '50%' }}
-            />
-          </motion.div>
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}>
+          {/* 只有在非手機裝置才顯示自定義游標 */}
+          {!isMobile && (
+            <motion.div
+              animate={{ x: cursorPos.x - 10, y: cursorPos.y - 10 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 28, mass: 0.5 }}
+              style={{
+                position: 'fixed',
+                top: 0, left: 0,
+                width: '20px', height: '20px',
+                border: '1px solid var(--accent-gold)',
+                borderRadius: '50%',
+                pointerEvents: 'none',
+                zIndex: 10000,
+                mixBlendMode: 'difference'
+              }}
+            >
+              <div style={{ position: 'absolute', top: '8px', left: '8px', width: '4px', height: '4px', backgroundColor: 'var(--accent-gold-light)', borderRadius: '50%' }} />
+            </motion.div>
+          )}
 
-          {/* Elegant Surprise Effects */}
           <AnimatePresence>
             {showHearts && (
               <div style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 9999, overflow: 'hidden' }}>
-                {[...Array(40)].map((_, i) => (
+                {[...Array(isMobile ? 20 : 40)].map((_, i) => (
                   <motion.div
                     key={i}
                     initial={{ y: -50, x: Math.random() * window.innerWidth, opacity: 0, scale: 0 }}
-                    animate={{ y: window.innerHeight + 50, opacity: [0, 1, 1, 0], scale: Math.random() * 0.5 + 0.5, rotate: Math.random() * 360 }}
+                    animate={{ y: window.innerHeight + 50, opacity: [0, 1, 1, 0], scale: Math.random() * 0.5 + 0.5 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 4 + Math.random() * 4, ease: "linear", delay: Math.random() * 2 }}
                     style={{ position: 'absolute', color: 'var(--accent-gold)' }}
                   >
-                    <Sparkles size={24} strokeWidth={1} />
+                    <Sparkles size={24} />
                   </motion.div>
                 ))}
               </div>
@@ -95,27 +97,24 @@ const App: React.FC = () => {
           <Gallery />
           <LoveLetter />
 
-          {/* Surprise Button */}
-          <div style={{ padding: '100px 20px', textAlign: 'center', position: 'relative' }}>
+          <div style={{ padding: '80px 20px', textAlign: 'center' }}>
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px rgba(212,175,55,0.4)' }}
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={triggerSurprise}
               style={{
-                padding: '20px 50px',
-                fontSize: '1rem',
+                padding: isMobile ? '15px 30px' : '20px 50px',
+                fontSize: '0.9rem',
                 letterSpacing: '3px',
                 textTransform: 'uppercase',
                 backgroundColor: 'transparent',
                 color: 'var(--accent-gold)',
                 border: '1px solid var(--accent-gold)',
                 borderRadius: '0', 
-                cursor: 'none',
+                cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '15px',
-                position: 'relative',
-                overflow: 'hidden'
+                gap: '15px'
               }}
             >
               <Sparkles size={18} />
@@ -123,14 +122,9 @@ const App: React.FC = () => {
             </motion.button>
           </div>
 
-          <footer style={{
-            padding: '60px 20px',
-            textAlign: 'center',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
-            color: 'var(--text-muted)',
-          }}>
-            <p style={{ fontSize: '0.8rem', letterSpacing: '4px', textTransform: 'uppercase' }}>
-              © 2026 <span style={{ color: 'var(--accent-gold)', margin: '0 10px' }}>|</span> Howard & Victoria
+          <footer style={{ padding: '60px 20px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.05)', color: 'var(--text-muted)' }}>
+            <p style={{ fontSize: '0.7rem', letterSpacing: '3px', textTransform: 'uppercase' }}>
+              © 2026 <span style={{ color: 'var(--accent-gold)', margin: '0 5px' }}>|</span> Howard & Victoria
             </p>
           </footer>
         </motion.div>
