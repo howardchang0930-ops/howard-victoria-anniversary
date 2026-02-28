@@ -7,16 +7,12 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [phase, setPhase] = useState<'counting' | 'waiting' | 'exploding'>('counting');
   const [isMobile, setIsMobile] = useState(false);
 
-  // 嚴格審核後的人像/合照清單
+  // 嚴選後的絕對合照清單 (排除所有作文、文件)
   const premiumPhotos = [
-    './uploads/_0ff3f03f-6b3e-4dd1-bb9a-8686478883c0.jpg',
     './uploads/S__44802053.jpg',
-    './uploads/_3cbb9049-3b98-45c0-a82a-f61bd2f370e0.jpg',
     './uploads/S__44802054.jpg',
-    './uploads/_433bd3c2-92c8-4722-aca3-9d8a6881f25c.jpg',
     './uploads/S__31137803.jpg',
-    './uploads/603612513_17922458970200045_5751134264985713997_n.jpg',
-    './uploads/539205996_17922231318125151_9092769545157182629_n.jpg'
+    './uploads/LINE_ALBUM_grad trip🫰_250807_1.jpg'
   ];
 
   useEffect(() => {
@@ -27,7 +23,7 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
 
       const photoTimer = setInterval(() => {
         setIndex((prev) => (prev + 1) % premiumPhotos.length);
-      }, 800);
+      }, 1000);
 
       const dateTimer = setInterval(() => {
         const elapsed = Date.now() - startTime;
@@ -67,37 +63,26 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
         overflow: 'hidden'
       }}
     >
-      {/* 背景照片層 (更高級的轉場) */}
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
-          initial={{ opacity: 0, scale: 1.2, filter: 'blur(10px) brightness(0)' }}
-          animate={{ opacity: 0.4, scale: 1.05, filter: 'blur(0px) brightness(1)' }}
-          exit={{ opacity: 0, scale: 1.1, filter: 'blur(5px) brightness(0)' }}
-          transition={{ duration: 1.5, ease: [0.43, 0.13, 0.23, 0.96] }}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 0.4, scale: 1.05 }}
+          exit={{ opacity: 0, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeInOut" }}
           style={{ position: 'absolute', inset: 0, zIndex: 0 }}
         >
-          <img src={premiumPhotos[index]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="mem" />
+          <img src={premiumPhotos[index]} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="memorial" />
         </motion.div>
       </AnimatePresence>
 
-      {/* 電影感漏光效果 (Light Leaks) */}
-      <motion.div
-        animate={{ opacity: [0.1, 0.3, 0.1], x: [-100, 100] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-        style={{
-          position: 'absolute', inset: 0,
-          background: 'linear-gradient(45deg, rgba(212,175,55,0.1) 0%, transparent 40%, rgba(183,110,121,0.1) 100%)',
-          zIndex: 1, pointerEvents: 'none'
-        }}
-      />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%)', zIndex: 1, pointerEvents: 'none' }} />
 
-      {/* 核心內容區 */}
       <div style={{ zIndex: 2, textAlign: 'center' }}>
         <AnimatePresence mode="wait">
           {phase === 'counting' && (
             <motion.div key="count" exit={{ opacity: 0, y: -20 }}>
-              <h2 className="gold-gradient-text" style={{ fontSize: isMobile ? '14vw' : '5rem', fontWeight: 200, letterSpacing: '10px' }}>
+              <h2 className="gold-gradient-text" style={{ fontSize: isMobile ? '12vw' : '5rem', fontWeight: 200, letterSpacing: '10px' }}>
                 {currentDate}
               </h2>
             </motion.div>
@@ -108,10 +93,9 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
               key="wait"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1 }}
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
             >
-              <h2 className="gold-gradient-text" style={{ fontSize: isMobile ? '12vw' : '4rem', marginBottom: '40px' }}>2026.03.02</h2>
+              <h2 className="gold-gradient-text" style={{ fontSize: isMobile ? '10vw' : '4rem', marginBottom: '40px' }}>2026.03.02</h2>
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
@@ -136,7 +120,6 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
 
           {phase === 'exploding' && (
             <motion.div key="explode" style={{ position: 'fixed', inset: 0, zIndex: 100 }}>
-              {/* 金色粒子炸裂特效 (鞭炮感) */}
               {[...Array(60)].map((_, i) => (
                 <motion.div
                   key={i}
@@ -165,10 +148,7 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           )}
         </AnimatePresence>
       </div>
-
-      {/* 雜訊與暗角 */}
       <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: `url("https://www.transparenttextures.com/patterns/stardust.png")`, pointerEvents: 'none', zIndex: 5 }} />
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle, transparent 30%, rgba(0,0,0,0.8) 100%)', zIndex: 4, pointerEvents: 'none' }} />
     </motion.div>
   );
 };
