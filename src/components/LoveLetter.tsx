@@ -1,63 +1,61 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Heart } from 'lucide-react';
 
 const LoveLetter: React.FC = () => {
   return (
-    <section id="letter" className="container" style={{ textAlign: 'center' }}>
+    <section id="letter" className="container" style={{ padding: '150px 5%', backgroundColor: 'var(--bg-dark)' }}>
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={{ opacity: 0, scale: 0.98 }}
         whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="glass"
         style={{
-          maxWidth: '700px',
+          maxWidth: '800px',
           margin: '0 auto',
-          padding: '50px',
-          backgroundColor: '#fff',
-          borderRadius: '30px',
-          boxShadow: '0 20px 50px rgba(0,0,0,0.05)',
-          border: '1px solid #f8bbd0',
-          position: 'relative'
+          padding: '80px 60px',
+          borderRadius: '2px',
+          position: 'relative',
+          borderTop: '1px solid rgba(212,175,55,0.3)',
+          borderBottom: '1px solid rgba(212,175,55,0.3)'
         }}
       >
-        <div style={{ position: 'absolute', top: '-25px', left: '50%', transform: 'translateX(-50%)' }}>
-          <div style={{
-            width: '50px',
-            height: '50px',
-            backgroundColor: '#f06292',
-            borderRadius: '50%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            boxShadow: '0 5px 15px rgba(240, 98, 146, 0.3)'
-          }}>
-            <Heart color="white" fill="white" size={24} />
-          </div>
-        </div>
+        {/* Decorative corner accents */}
+        <div style={{ position: 'absolute', top: '20px', left: '20px', width: '20px', height: '20px', borderTop: '2px solid var(--accent-gold)', borderLeft: '2px solid var(--accent-gold)' }} />
+        <div style={{ position: 'absolute', top: '20px', right: '20px', width: '20px', height: '20px', borderTop: '2px solid var(--accent-gold)', borderRight: '2px solid var(--accent-gold)' }} />
+        <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '20px', height: '20px', borderBottom: '2px solid var(--accent-gold)', borderLeft: '2px solid var(--accent-gold)' }} />
+        <div style={{ position: 'absolute', bottom: '20px', right: '20px', width: '20px', height: '20px', borderBottom: '2px solid var(--accent-gold)', borderRight: '2px solid var(--accent-gold)' }} />
 
-        <h2 style={{ fontSize: '2rem', marginBottom: '30px', color: '#4a4a4a' }}>A Note for You</h2>
+        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+          <p style={{ color: 'var(--accent-gold)', letterSpacing: '4px', textTransform: 'uppercase', fontSize: '0.85rem' }}>A Personal Note</p>
+          <h2 className="romantic-text" style={{ fontSize: '3.5rem', color: 'var(--text-main)', marginTop: '15px' }}>For Victoria</h2>
+        </div>
         
         <div style={{
-          textAlign: 'left',
-          lineHeight: '2',
-          color: '#555',
-          fontFamily: 'var(--font-base)',
-          fontSize: '1.1rem'
+          textAlign: 'justify',
+          textAlignLast: 'center',
+          lineHeight: '2.4',
+          color: 'var(--text-muted)',
+          fontSize: '1.1rem',
+          fontWeight: 300,
+          maxWidth: '600px',
+          margin: '0 auto'
         }}>
-          <p style={{ marginBottom: '20px' }}>Dear Victoria,</p>
-          <p style={{ marginBottom: '20px' }}>
-            Looking back on this year, I feel so incredibly lucky to have you by my side. 
-            Every moment we've shared, from the smallest laugh to our biggest adventures, 
-            has been a part of a beautiful journey that I cherish every single day.
+          <p style={{ marginBottom: '25px' }}>
+            Looking back on this past year, every memory feels like a scene from a beautiful film. 
+            From our very first encounter on March 2nd to all the quiet, unnoticed moments we've shared since.
           </p>
-          <p style={{ marginBottom: '20px' }}>
-            Thank you for being you, for your kindness, and for all the love you've given me. 
-            I can't wait to see what the next year holds for us.
+          <p style={{ marginBottom: '25px' }}>
+            You bring a light into my life that I never knew I was missing. Your elegance, your laughter, 
+            and your warmth have made the last 365 days the most precious chapter of my life.
           </p>
-          <p style={{ textAlign: 'right', marginTop: '40px' }}>
-            With all my love,<br />
-            <span className="romantic-text" style={{ fontSize: '1.8rem', color: '#f06292' }}>Howard</span>
+          <p style={{ marginBottom: '40px' }}>
+            Here is to all the adventures we have yet to take, and to the endless love we continue to grow.
           </p>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '60px' }}>
+            <span style={{ fontSize: '0.9rem', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Yours endlessly,</span>
+            <span className="romantic-text" style={{ fontSize: '3rem', color: 'var(--accent-gold)', marginTop: '10px' }}>Howard</span>
+          </div>
         </div>
       </motion.div>
     </section>
