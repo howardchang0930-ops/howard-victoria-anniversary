@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const Hero: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
