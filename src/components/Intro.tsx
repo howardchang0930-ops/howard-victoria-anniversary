@@ -110,7 +110,7 @@ const Intro: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
           textShadow: '0 0 40px rgba(212,175,55,0.3)'
         }}>
           {currentDate}
-        </h2>
+        </motion.h2>
         <motion.div
           initial={{ width: 0 }}
           animate={{ width: isMobile ? '60%' : '300px' }}
