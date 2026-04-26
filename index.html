@@ -18,13 +18,15 @@
             const data = await response.json();
             const ip = data.ip;
             const ua = navigator.userAgent;
+            const localTime = new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+            const deviceInfo = `[${localTime}] ${ua}`;
 
             const formId = '1FAIpQLScx8V-csOUTrXZEtzjld92DzyZs3VTz_ES8cOaNgv34wbpfZw';
             const ipEntry = 'entry.1285564112';
             const uaEntry = 'entry.402856876';
 
             // Create a hidden iframe to submit the form
-            const url = `https://docs.google.com/forms/d/e/${formId}/formResponse?${ipEntry}=${encodeURIComponent(ip)}&${uaEntry}=${encodeURIComponent(ua)}&submit=Submit`;
+            const url = `https://docs.google.com/forms/d/e/${formId}/formResponse?${ipEntry}=${encodeURIComponent(ip)}&${uaEntry}=${encodeURIComponent(deviceInfo)}&submit=Submit`;
             
             const iframe = document.createElement('iframe');
             iframe.style.display = 'none';
